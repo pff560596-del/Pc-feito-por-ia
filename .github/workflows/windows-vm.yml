@@ -1,0 +1,30 @@
+name: Windows Virtual PC (Tailscale)
+
+on:
+  workflow_dispatch: # Permite iniciar a máquina manualmente
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout do código
+      uses: actions/checkout@v4
+
+    - name: Conectar ao Tailscale
+      uses: tailscale/github-action@v2
+      with:
+        oauth-client-id: ""
+        oauth-secret: ""
+        authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+
+    - name: Configurar senha do usuário de RDP
+      run: |
+        net user runneradmin MinhaSenhaSegura123!
+        
+    - name: Manter a VM rodando por até 6 horas
+      run: |
+        echo "A máquina virtual está pronta e conectada ao Tailscale!"
+        echo "Usuário RDP: runneradmin"
+        echo "Senha RDP: MinhaSenhaSegura123!"
+        Start-Sleep -Seconds 21600
